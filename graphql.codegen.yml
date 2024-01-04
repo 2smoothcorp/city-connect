@@ -1,0 +1,37 @@
+overwrite: true
+schema: ""
+documents: ./src/services/api/**/*.graphql
+generates:
+  ./services/graphql/schema.graphql:
+    plugins:
+      - schema-ast
+  ./src/services/api/types-graphql.generated.tsx:
+    plugins:
+      - typescript
+    config:
+      constEnums: true
+      enumsAsTypes: true
+      allowEnumStringTypes: true
+      skipTypename: true
+      useTypeImports: true
+  ./src/services/api/:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.tsx
+      baseTypesPath: types-graphql.generated.tsx
+      importTypesNamespace: SchemaTypes
+    plugins:
+      - typescript-operations
+      - typescript-react-query
+    config:
+    exposeQueryKeys: true
+      exposeDocument: true
+      exposeMutationKeys: true
+      exposeFetcher: true
+      withHooks: true
+      skipTypename: true
+      useTypeImports: true
+      defaultBaseOptions: { fetchPolicy: "no-cache" }
+      fetcher:
+        func: '../../fetch#fetchData'
+        isReactHook: false
